@@ -18,4 +18,3 @@ assertionСhecking(1, 0, 0)
 assertionСhecking(1, 0, 1)
 assertionСhecking(1, 1, 0)
 assertionСhecking(1, 1, 1)
-

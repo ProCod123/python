@@ -17,4 +17,5 @@ def quarter(x, y):
     else:
         print('Координаты не должны быть равны 0!')
 
+
 print('Номер четверти: ', quarter(x, y))
