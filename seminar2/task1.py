@@ -5,8 +5,8 @@
 
 number = int(input('Введите число: '))
 list = []
-
 rezl =[]
+
 for i in range(1, number + 1):
     fac = 1
     res = ''
