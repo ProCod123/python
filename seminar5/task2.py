@@ -1,6 +1,7 @@
 import os 
 field = [1, 2, 3, 4, 5, 6, 7, 8, 9]    
 
+
 def print_field(field):
     os.system('cls')
     print(f'  {field[0]} | {field[1]} | {field[2]}\n'
