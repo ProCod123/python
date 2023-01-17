@@ -1,5 +1,4 @@
 import random
-import time
 
 amount = 120
 max_move = 28
