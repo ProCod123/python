@@ -1,45 +1,44 @@
-def adding_record(data, file_path1, file_path2):
-    if data[3].isdigit() is True:
-        first_format(data, file_path1)
-        second_format(data, file_path2)
+def adding_record(data, file_path):
+    if data[2].isdigit() is True:
+        with open(file_path, "a", encoding='utf-8') as f:
+            record = ''
+            for i in data:
+                record += i + '|'
+            f.write(record + '\n')
         print('Запись добавлена!')
     else:
         print('Запись данных не выполнена! '
-              'Номер телефона должен состоять из цифр')
+              'Вместо оценки введен текст')
 
 
-def first_format(data, file_path):
-    with open(file_path, "a", encoding='utf-8') as f:
-        record = ''
-        for item in data:
-            record += item + (16 - len(item)) * ' ' + '|'
-        spliter = '-' * 68
-        f.write(record + '\n' + spliter + '\n')
-
-
-def second_format(data, file_path):
-    with open(file_path, "a", encoding='utf-8') as f:
-        record = ''
-        for i in data:
-            record += i + '|'
-        f.write(record + '\n')
-
-
-def student_score(surname, discipline):
-    with open("second_format.txt", "r", encoding='utf-8') as file:
+def student_score(surname, discipline, file_path):
+    with open(file_path, "r", encoding='utf-8') as file:
         line = file.readline()
-        output = discipline + ' ' + surname + ':'
+        output = discipline + ': '
+        count = 0
         while line:
             if surname in line and discipline in line:
                 list_data = line.split('|')
                 output += ' ' + list_data[-2]
+                count += 1
             line = file.readline()      
     print(output)
 
 
 
-def disciplinces():
-    with open("second_format.txt", "r", encoding='utf-8') as file:
+def student_exist(surname, file_path): # Проверка на наличие фамилии в журнале
+    with open(file_path, "r", encoding='utf-8') as file:
+        line = file.readline()
+        count = 0
+        while line:
+            if surname in line:
+                count += 1
+            line = file.readline()      
+    return count
+
+
+def disciplinces(file_path):
+    with open(file_path, "r", encoding='utf-8') as file:
         line = file.readline()
         disciplinces = []
         while line:
@@ -50,22 +49,8 @@ def disciplinces():
     return unic_discipline 
 
 
-disciplinces()
 
 
-def all_students():
-    with open("second_format.txt", "r", encoding='utf-8') as file:
-        line = file.readline()
-        students = []
-        while line:
-            list_data = line.split('|')
-            students.append(list_data[1])
-            line = file.readline()
-    unic_students = set(students)
-    return unic_students
-
-
-all_students()
 
 
 
