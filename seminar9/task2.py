@@ -53,14 +53,13 @@ def next_move(update, context, human_move):
             else:
                 trigger = True    
         amount -= human_move
-        
     elif move == 'computer':
         if amount > 28:
             computer_move = random.randint(1,28)
             amount -= computer_move
-            print(f'Компьютер взял {computer_move} конфет')
+            text = f'Компьютер взял {computer_move} конфет'
         elif amount <= 28:
-            print(f'Компьютер взял {amount} конфет')
+            text = f'Компьютер взял {amount} конфет'
             amount = 0
     return amount 
     
