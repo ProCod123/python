@@ -3,22 +3,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import random
 import requests
 
-
 BOT_TOKEN = '5209749192:AAEyxtpL5ndVu8-cs77LgG_W878lqKGaT-I'
-
-def send_message(chat_id, text):
-    params = {
-        'chat_id': chat_id,
-        'text': text,
-    }
-    response = requests.get('https://api.telegram.org/bot'+ BOT_TOKEN + '/sendMessage', params=params)
-
-
-
-
-
-
-
 
 bot = Bot(token= BOT_TOKEN)
 updater = Updater(token= BOT_TOKEN)
@@ -28,48 +13,65 @@ amount = 120
 max_move = 28
 move = 'man'
 
+
 def start(update, context):
-    context.bot.send_message(update.effective_chat.id, 'Привет! ' 
+    context.bot.send_message(update.effective_chat.id, 'Привет! '
                              'Я Бот с которым можно поиграть в "Конфетки" '
                              f'На столе лежить {amount} конфет, за один ход можно взять не больше {max_move} конфет. '
                              'Человек делает ход первым!')
+    context.bot.send_message(update.effective_chat.id, 'Сделайте ход')
+
+
 def data(update, context):
-    human_move = int(update.message.text)    
-    next_move(update, context, human_move)
-    
- 
+    player_move = int(update.message.text)
+    game(update, context, player_move)
 
 
-def next_move(update, context, human_move):
+def human_move(human_move):
     global amount
+    amount -= human_move
+    text = f'Осталось {amount} конфет'
+    return text
+
+
+def computer_move(computer_move):
+    global amount
+    if amount > 28:
+        computer_move = random.randint(1,28)
+        amount -= computer_move
+        text = f'Компьютер взял {computer_move} конфет. \n Осталось: {amount} \n Сделайте ход'
+    elif amount <= 28:
+        text = f'Компьютер взял {amount} конфет'
+        amount = 0
+    return text
+
+
+def game(update, context, player_move):
     global move
-    if move == 'man':
-        trigger = False
-        while trigger == False:
-            if human_move > 28:
-                text = f'За один ход можно взять не больше {max_move} конфет!!!'
+    while amount > 0:
+        if move == 'man':
+            if player_move <= 28:
+                text = human_move(player_move)
                 context.bot.send_message(update.effective_chat.id, text)
-                return
             else:
-                trigger = True    
-        amount -= human_move
-    elif move == 'computer':
-        if amount > 28:
-            computer_move = random.randint(1,28)
-            amount -= computer_move
-            text = f'Компьютер взял {computer_move} конфет'
-        elif amount <= 28:
-            text = f'Компьютер взял {amount} конфет'
-            amount = 0
-    return amount 
-    
-    
+                text = f'За один ход можно взять не более {max_move} конфет!!!'
+                context.bot.send_message(update.effective_chat.id, text)
+                break
+            move = 'computer'     
+        elif move == 'computer':
+            text = computer_move(computer_move)
+            context.bot.send_message(update.effective_chat.id, text)
+            move = 'man'
+            break
+    if amount == 0:
+        winner = 'Компьютер' if move == 'man' else 'Человек'
+        context.bot.send_message(update.effective_chat.id, f'{winner} победил!!!')
+
 
 start_handler = CommandHandler('start', start)
 message_handler = MessageHandler(Filters.text, data)
 
 dispatcher.add_handler(start_handler)
-
 dispatcher.add_handler(message_handler)
 
 
