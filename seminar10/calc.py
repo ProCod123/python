@@ -45,7 +45,7 @@ def result(expression):
 
 def logging(expression, user_id, result):
     with open("log.txt", "a", encoding='utf-8') as f:
-        now = datetime.now()
+        now = datetime.now().replace(microsecond=0)
         record = (expression.ljust(44, " ") + '| ' + str(result).ljust(12, " ") + '| '
                   + str(user_id).ljust(13, " ") + '| ' + str(now) + '|' + '\n')
         f.write(record)
